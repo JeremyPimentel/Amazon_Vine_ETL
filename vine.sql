@@ -67,7 +67,7 @@ WHERE vine = 'N';
 
 SELECT * FROM vine_table_5;
 
-DROP vine_table_6;
+DROP TABLE vine_table_6;
 CREATE TABLE vine_table_6 (
   total_reviews INTEGER,
   total_5_star_ratings INTEGER,
@@ -75,43 +75,53 @@ CREATE TABLE vine_table_6 (
   percentage_5_star_reviews_unpaid INTEGER
 );
 
+CREATE TABLE total_reviews(
+total_reviews INTEGER);
 
+
+INSERT INTO total_reviews
 SELECT COUNT(review_id)
 FROM vine_table;
+SELECT * FROM total_reviews;
 
 
+CREATE TABLE total_5_reviews(
+total_5_star_reviews INTEGER);
+
+INSERT INTO total_5_reviews
 SELECT COUNT(star_rating)
 FROM vine_table
 WHERE star_rating = 5;
+SELECT * FROM total_5_reviews;
 
 
+CREATE TABLE total_paid_5_reviews(
+total_5_reviews_paid INTEGER);
 
+INSERT INTO total_paid_5_reviews
 SELECT COUNT(star_rating)
 FROM vine_table
 WHERE (star_rating = 5 AND
-vine = 'Y')
-;
+vine = 'Y');
+SELECT * FROM total_paid_5_reviews;
 
---Determine Total Percentage Paid Reviews
---Total Number of paid reviews/Total 5_star Reviews
---Total 5_Star Reviews = total_5_star_reviews FROM vine_table_6
 
-SELECT COUNT(star_rating) AS RESULT
-FROM vine_table
-WHERE (star_rating = 5 AND
-vine = 'Y')
-;
+SELECT CAST(total_5_reviews_paid AS FLOAT)*100 AS percent_five_star
+FROM total_paid_5_reviews/
 
-SELECT(
-SELECT COUNT(star_rating)
-FROM vine_table
-WHERE (star_rating = 5 AND
-vine = 'Y'))
-/(SELECT total_5_star_ratings FROM vine_table_6)*100;
+SELECT
+CAST(total_5_star_reviews AS FLOAT) *100 AS percent_five_star
+FROM total_5_reviews;
+
+
+-- CAST(total_5_reivews_paid AS FLOAT)/
+-- CAST(total_5_star_reviews AS FLOAT)*100 AS percent_five_star;
+
 
 
  
-
+SELECT * FROM total_paid_5_reviews;
+SELECT * FROM total_5_reviews;
 
 SELECT * FROM vine_table_6;
 
@@ -119,7 +129,25 @@ SELECT * FROM vine_table_6;
 
 
 
+SELECT
+	CAST(
+		COUNT(star_rating) filter (where star_rating = 5 AND vine = 'Y') as float
+	) 
+	/
+	cast( COUNT(star_rating) filter (where star_rating = 5) as float
+	)
+	*100
+from vine_table;
 
 
+SELECT
+	CAST(
+		COUNT(star_rating) filter (where star_rating = 5 AND vine = 'N') as float
+	) 
+	/
+	cast( COUNT(star_rating) filter (where star_rating = 5) as float
+	)
+	*100
+from vine_table;
 
 
